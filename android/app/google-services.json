@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "999548562045",
+    "project_id": "brain-boost-game",
+    "storage_bucket": "brain-boost-game.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999548562045:android:afceba2c70c525e22cdf14",
+        "android_client_info": {
+          "package_name": "com.braingame.brain_boost"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq7Y4nql2CaX_Xgt3O3g_ArZWZZ81Vz3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

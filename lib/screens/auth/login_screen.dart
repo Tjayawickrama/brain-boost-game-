@@ -210,27 +210,10 @@ class _LoginScreenState extends State<LoginScreen>
 
   Widget _buildHeader() {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      // Logo / icon
-      Container(
-        width: 60,
-        height: 60,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: AppColors.primaryGradient,
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withOpacity(0.35),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
-            )
-          ],
-        ),
-        child: const Icon(Icons.psychology_rounded,
-            color: Colors.white, size: 34),
+      Image.asset(
+        'assets/logo.png',
+        width: 64,
+        height: 64,
       ),
       const SizedBox(height: 24),
       const Text('Welcome back! 👋',

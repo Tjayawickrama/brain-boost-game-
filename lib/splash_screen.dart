@@ -186,24 +186,11 @@ class _LogoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        SizedBox(
-            width: 140, height: 154, child: CustomPaint(painter: _BulbPainter())),
-        const SizedBox(height: 20),
-        const Text('BRAIN BOOST',
-            style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 5,
-                color: Color(0xFF0A7A7A))),
-        const SizedBox(height: 6),
-        const Text('PLAY  ·  THINK  ·  IMPROVE',
-            style: TextStyle(
-                fontSize: 9.5,
-                fontWeight: FontWeight.w400,
-                letterSpacing: 3,
-                color: Color(0xFF26BFBF))),
-      ]),
+      child: Image.asset(
+        'assets/logo.png',
+        width: 200,
+        fit: BoxFit.contain,
+      ),
     );
   }
 }

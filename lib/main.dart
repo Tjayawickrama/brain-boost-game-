@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'services/mock_api_service.dart';
 import 'services/storage_service.dart';
 import 'providers/auth_provider.dart';
@@ -20,6 +22,8 @@ import 'screens/leaderboard_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+
 
   // Lock to portrait
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -81,20 +85,52 @@ class _SplashGate extends StatefulWidget {
 }
 
 class _SplashGateState extends State<_SplashGate> {
+  bool _firebaseReady = false;
+  bool _splashFinished = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initFirebase();
+  }
+
+  Future<void> _initFirebase() async {
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    } catch (e) {
+      // Ignore if already initialized
+    }
+    if (mounted) {
+      setState(() {
+        _firebaseReady = true;
+      });
+      _checkAndRoute();
+    }
+  }
+
   void _onSplashFinished() {
     if (!mounted) return;
-    final auth = context.read<AuthProvider>();
-    
-    // Smooth transition to next screen
-    Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        pageBuilder: (_, __, ___) =>
-            auth.isLoggedIn ? const MainNavScreen() : const LoginScreen(),
-        transitionDuration: const Duration(milliseconds: 600),
-        transitionsBuilder: (_, anim, __, child) =>
-            FadeTransition(opacity: anim, child: child),
-      ),
-    );
+    setState(() {
+      _splashFinished = true;
+    });
+    _checkAndRoute();
+  }
+
+  void _checkAndRoute() {
+    if (_firebaseReady && _splashFinished) {
+      final auth = context.read<AuthProvider>();
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) =>
+              auth.isLoggedIn ? const MainNavScreen() : const LoginScreen(),
+          transitionDuration: const Duration(milliseconds: 600),
+          transitionsBuilder: (_, anim, __, child) =>
+              FadeTransition(opacity: anim, child: child),
+        ),
+      );
+    }
   }
 
   @override

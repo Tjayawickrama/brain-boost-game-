@@ -131,7 +131,10 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                       ),
                     ),
                   ]),
-                ).animate().fadeIn(duration: 400.ms).scale(begin: const Offset(0.95, 0.95)),
+                )
+                    .animate()
+                    .fadeIn(duration: 400.ms)
+                    .scale(begin: const Offset(0.95, 0.95)),
 
                 const SizedBox(height: 28),
 
@@ -142,7 +145,8 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                     decoration: BoxDecoration(
                       color: AppColors.greenLight,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.green.withOpacity(0.4)),
+                      border:
+                          Border.all(color: AppColors.green.withOpacity(0.4)),
                     ),
                     child: Row(children: [
                       const Icon(Icons.check_circle_rounded,
@@ -159,7 +163,8 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                                       fontSize: 16)),
                               Text('Come back tomorrow for a new challenge',
                                   style: TextStyle(
-                                      fontSize: 12, color: AppColors.textMedium)),
+                                      fontSize: 12,
+                                      color: AppColors.textMedium)),
                             ]),
                       ),
                     ]),
@@ -203,8 +208,18 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
   String _todayString() {
     final now = DateTime.now();
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
     return '${now.day} ${months[now.month - 1]} ${now.year}';
   }
@@ -235,8 +250,7 @@ class _InfoCard extends StatelessWidget {
         Text(icon, style: const TextStyle(fontSize: 24)),
         const SizedBox(height: 8),
         Text(title,
-            style: const TextStyle(
-                fontSize: 12, color: AppColors.textLight)),
+            style: const TextStyle(fontSize: 12, color: AppColors.textLight)),
         Text(subtitle,
             style: const TextStyle(
                 fontSize: 15,

@@ -61,15 +61,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16),
-          Container(
+          Image.asset(
+            'assets/logo.png',
             width: 64,
             height: 64,
-            decoration: BoxDecoration(
-              color: AppColors.primaryLight,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Icon(Icons.lock_reset_rounded,
-                color: AppColors.primary, size: 32),
           ),
           const SizedBox(height: 24),
           const Text('Reset Password',

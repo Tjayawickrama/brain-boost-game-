@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user_model.dart';
 import '../services/mock_api_service.dart';
 import '../services/storage_service.dart';
@@ -41,9 +42,19 @@ class AuthProvider extends ChangeNotifier {
     _setLoading(true);
     _errorMessage = null;
     try {
-      final data = await _api.loginUser(email, password);
-      final userJson = data['user'] as Map<String, dynamic>;
-      _user = UserModel.fromJson(userJson);
+      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final fbUser = userCredential.user!;
+      _user = UserModel(
+        id: fbUser.uid,
+        name: fbUser.displayName ?? 'Player',
+        email: fbUser.email ?? '',
+        totalScore: _storage.totalScore,
+        level: _storage.level,
+        gamesPlayed: _storage.gamesPlayed,
+      );
       _isLoggedIn = true;
       // Persist session
       await _storage.setLoggedIn(true);
@@ -51,8 +62,12 @@ class AuthProvider extends ChangeNotifier {
       await _storage.setUserEmail(_user!.email);
       notifyListeners();
       return true;
+    } on FirebaseAuthException catch (e) {
+      _errorMessage = e.message ?? 'An error occurred';
+      notifyListeners();
+      return false;
     } catch (e) {
-      _errorMessage = e.toString().replaceFirst('Exception: ', '');
+      _errorMessage = e.toString();
       notifyListeners();
       return false;
     } finally {
@@ -64,17 +79,33 @@ class AuthProvider extends ChangeNotifier {
     _setLoading(true);
     _errorMessage = null;
     try {
-      final data = await _api.registerUser(name, email, password);
-      final userJson = data['user'] as Map<String, dynamic>;
-      _user = UserModel.fromJson(userJson).copyWith(name: name);
+      final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final fbUser = userCredential.user!;
+      await fbUser.updateDisplayName(name);
+      
+      _user = UserModel(
+        id: fbUser.uid,
+        name: name,
+        email: email,
+        totalScore: _storage.totalScore,
+        level: _storage.level,
+        gamesPlayed: _storage.gamesPlayed,
+      );
       _isLoggedIn = true;
       await _storage.setLoggedIn(true);
       await _storage.setUserName(name);
       await _storage.setUserEmail(email);
       notifyListeners();
       return true;
+    } on FirebaseAuthException catch (e) {
+      _errorMessage = e.message ?? 'An error occurred';
+      notifyListeners();
+      return false;
     } catch (e) {
-      _errorMessage = e.toString().replaceFirst('Exception: ', '');
+      _errorMessage = e.toString();
       notifyListeners();
       return false;
     } finally {
@@ -83,6 +114,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> logout() async {
+    await FirebaseAuth.instance.signOut();
     await _storage.setLoggedIn(false);
     _isLoggedIn = false;
     _user = null;
