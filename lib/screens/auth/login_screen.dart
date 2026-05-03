@@ -66,12 +66,10 @@ class _LoginScreenState extends State<LoginScreen>
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
     
-    // Save credentials if remember me is checked
-    if (_rememberMe) {
-      final storage = StorageService();
-      await storage.init();
-      await storage.setRememberMe(true, _emailCtrl.text.trim(), _passCtrl.text);
-    }
+    // Save or clear credentials based on remember me checkbox
+    final storage = StorageService();
+    await storage.init();
+    await storage.setRememberMe(_rememberMe, _emailCtrl.text.trim(), _passCtrl.text);
     
     final auth = context.read<AuthProvider>();
     final ok = await auth.login(_emailCtrl.text.trim(), _passCtrl.text);
