@@ -19,6 +19,9 @@ class AppConstants {
   static const String keyGamesPlayed = 'games_played';
   static const String keyLastChallenge = 'last_challenge_date';
   static const String keyDarkMode = 'dark_mode';
+  static const String keyRememberEmail = 'remember_email';
+  static const String keyRememberPassword = 'remember_password';
+  static const String keyRememberEnabled = 'remember_enabled';
 
   // Game config
   static const int memoryGameTime = 60; // seconds

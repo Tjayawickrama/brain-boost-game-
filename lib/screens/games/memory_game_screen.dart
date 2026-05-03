@@ -21,8 +21,6 @@ class _CardData {
   _CardData({
     required this.id,
     required this.emoji,
-    this.isFaceUp = false,
-    this.isMatched = false,
   });
 }
 

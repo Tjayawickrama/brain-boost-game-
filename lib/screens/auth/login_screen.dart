@@ -4,6 +4,7 @@ import '../../providers/auth_provider.dart';
 import '../../widgets/app_button.dart';
 import '../../widgets/app_text_field.dart';
 import '../../theme/app_colors.dart';
+import '../../services/storage_service.dart';
 import 'register_screen.dart';
 import 'forgot_password_screen.dart';
 
@@ -23,6 +24,7 @@ class _LoginScreenState extends State<LoginScreen>
   late AnimationController _fadeCtrl;
   late Animation<double> _fadeAnim;
   late Animation<Offset> _slideAnim;
+  bool _rememberMe = false;
 
   @override
   void initState() {
@@ -37,6 +39,20 @@ class _LoginScreenState extends State<LoginScreen>
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _fadeCtrl, curve: Curves.easeOutCubic));
     _fadeCtrl.forward();
+    _loadSavedCredentials();
+  }
+
+  /// Load saved credentials if remember me was enabled
+  Future<void> _loadSavedCredentials() async {
+    final storage = StorageService();
+    await storage.init();
+    if (storage.isRememberEnabled) {
+      setState(() {
+        _rememberMe = true;
+        _emailCtrl.text = storage.rememberEmail;
+        _passCtrl.text = storage.rememberPassword;
+      });
+    }
   }
 
   @override
@@ -49,6 +65,14 @@ class _LoginScreenState extends State<LoginScreen>
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
+    
+    // Save credentials if remember me is checked
+    if (_rememberMe) {
+      final storage = StorageService();
+      await storage.init();
+      await storage.setRememberMe(true, _emailCtrl.text.trim(), _passCtrl.text);
+    }
+    
     final auth = context.read<AuthProvider>();
     final ok = await auth.login(_emailCtrl.text.trim(), _passCtrl.text);
     if (ok && mounted) {
@@ -108,11 +132,23 @@ class _LoginScreenState extends State<LoginScreen>
                       },
                     ),
                     const SizedBox(height: 12),
-
-                    // ── Forgot password ───────────────────────────────────
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: GestureDetector(
+                    Row(children: [
+                      Checkbox(
+                        value: _rememberMe,
+                        onChanged: (value) => setState(() => _rememberMe = value ?? false),
+                        activeColor: AppColors.primary,
+                        side: const BorderSide(color: AppColors.primary, width: 1.5),
+                      ),
+                      const Text(
+                        'Remember me',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.textMedium,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const Spacer(),
+                      GestureDetector(
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -127,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen>
                           ),
                         ),
                       ),
-                    ),
+                    ]),
                     const SizedBox(height: 8),
 
                     // ── Error message ─────────────────────────────────────

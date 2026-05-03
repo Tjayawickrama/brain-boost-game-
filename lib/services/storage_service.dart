@@ -47,6 +47,22 @@ class StorageService {
   bool get isDarkMode => _p.getBool(AppConstants.keyDarkMode) ?? false;
   Future<void> setDarkMode(bool v) => _p.setBool(AppConstants.keyDarkMode, v);
 
+  // ── Remember me ───────────────────────────────────────────────────────────
+  bool get isRememberEnabled => _p.getBool(AppConstants.keyRememberEnabled) ?? false;
+  String get rememberEmail => _p.getString(AppConstants.keyRememberEmail) ?? '';
+  String get rememberPassword => _p.getString(AppConstants.keyRememberPassword) ?? '';
+  
+  Future<void> setRememberMe(bool enabled, String email, String password) async {
+    await _p.setBool(AppConstants.keyRememberEnabled, enabled);
+    if (enabled) {
+      await _p.setString(AppConstants.keyRememberEmail, email);
+      await _p.setString(AppConstants.keyRememberPassword, password);
+    } else {
+      await _p.remove(AppConstants.keyRememberEmail);
+      await _p.remove(AppConstants.keyRememberPassword);
+    }
+  }
+
   // ── Wipe all data (logout) ────────────────────────────────────────────────
   Future<void> clear() => _p.clear();
 }
