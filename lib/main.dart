@@ -162,14 +162,19 @@ class _GamesHubScreen extends StatelessWidget {
                     ),
                   ),
                   child: Stack(children: [
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      top: 0,
-                      child: Image.asset(
-                        'assets/images/games_header.png',
-                        width: width * 0.6,
-                        fit: BoxFit.cover,
+                    Positioned.fill(
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(28),
+                          bottomRight: Radius.circular(28),
+                        ),
+                        child: Opacity(
+                          opacity: 0.08,
+                          child: Image.asset(
+                            'assets/images/games_header.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
                     Padding(

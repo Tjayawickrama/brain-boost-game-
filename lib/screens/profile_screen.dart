@@ -95,27 +95,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 3),
                     ),
-                    child: Center(
-                      child: Text(
-                        (user?.name ?? 'P').substring(0, 1).toUpperCase(),
-                        style: const TextStyle(
-                            fontSize: 38,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white),
-                      ),
-                    ),
+                    child: profile.profileImage != null
+                        ? ClipOval(
+                            child: Image.file(
+                              profile.profileImage!,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Center(
+                            child: Text(
+                              (user?.name ?? 'P').substring(0, 1).toUpperCase(),
+                              style: const TextStyle(
+                                  fontSize: 38,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.white),
+                            ),
+                          ),
                   ),
                   Positioned(
-                    bottom: 0, right: 0,
-                    child: Container(
-                      width: 26,
-                      height: 26,
-                      decoration: const BoxDecoration(
-                        color: AppColors.starGold,
-                        shape: BoxShape.circle,
+                    bottom: 0,
+                    right: 0,
+                    child: GestureDetector(
+                      onTap: () => profile.pickProfileImage(),
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: AppColors.starGold,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                        child: const Icon(Icons.camera_alt_rounded,
+                            color: Colors.white, size: 16),
                       ),
-                      child: const Icon(Icons.star_rounded,
-                          color: Colors.white, size: 16),
                     ),
                   ),
                 ]),

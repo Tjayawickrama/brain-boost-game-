@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import '../models/leaderboard_model.dart';
 import '../models/challenge_model.dart';
 import '../services/mock_api_service.dart';
@@ -15,6 +17,8 @@ class ProfileProvider extends ChangeNotifier {
   List<LeaderboardEntry> _leaderboard = [];
   ChallengeModel? _dailyChallenge;
   bool _challengeLoading = false;
+  File? _profileImage;
+  final ImagePicker _picker = ImagePicker();
 
   ProfileProvider(this._api, this._storage);
 
@@ -24,8 +28,27 @@ class ProfileProvider extends ChangeNotifier {
   List<LeaderboardEntry> get leaderboard => _leaderboard;
   ChallengeModel? get dailyChallenge => _dailyChallenge;
   bool get challengeLoading => _challengeLoading;
+  File? get profileImage => _profileImage;
+  bool get isDarkMode => _storage.isDarkMode;
 
-  /// Fetch profile stats and achievements.
+  /// Pick image from gallery or camera
+  Future<void> pickProfileImage() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 85,
+      );
+      if (image != null) {
+        _profileImage = File(image.path);
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('Error picking image: $e');
+    }
+  }
+
   Future<void> fetchProfile() async {
     if (_weeklyScores.isNotEmpty) return;
     _isLoading = true;
