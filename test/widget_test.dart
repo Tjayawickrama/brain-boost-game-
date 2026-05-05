@@ -20,8 +20,8 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => AuthProvider(api, storage)),
-          ChangeNotifierProvider(create: (_) => GameProvider(api, storage)),
+          ChangeNotifierProvider(create: (_) => AuthProvider(storage)),
+          ChangeNotifierProvider(create: (_) => GameProvider(api)),
           ChangeNotifierProvider(create: (_) => ProfileProvider(api, storage)),
         ],
         child: MaterialApp(

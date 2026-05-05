@@ -76,6 +76,14 @@ class _LoginScreenState extends State<LoginScreen>
     if (ok && mounted) {
       // Navigate to main app - handled by AuthGate in main.dart
       Navigator.of(context).pushReplacementNamed('/home');
+    } else if (mounted && auth.errorMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(auth.errorMessage!),
+          backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     }
   }
 
@@ -218,7 +226,7 @@ class _LoginScreenState extends State<LoginScreen>
                           style: TextStyle(
                               color: Colors.grey[500], fontSize: 14)),
                       GestureDetector(
-                        onTap: () => Navigator.pushReplacement(
+                        onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (_) => const RegisterScreen()),

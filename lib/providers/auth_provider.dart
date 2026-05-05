@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user_model.dart';
-import '../services/mock_api_service.dart';
 import '../services/storage_service.dart';
 
 /// Authentication state: login, register, logout, persist session.
 class AuthProvider extends ChangeNotifier {
-  final MockApiService _api;
   final StorageService _storage;
 
   UserModel? _user;
@@ -14,7 +12,7 @@ class AuthProvider extends ChangeNotifier {
   String? _errorMessage;
   bool _isLoggedIn = false;
 
-  AuthProvider(this._api, this._storage) {
+  AuthProvider(this._storage) {
     _loadFromStorage();
   }
 

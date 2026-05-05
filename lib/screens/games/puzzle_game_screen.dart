@@ -27,7 +27,6 @@ class _PuzzleGameScreenState extends State<PuzzleGameScreen>
   late ConfettiController _confetti;
   late AnimationController _winnerAnimController;
   late AnimationController _tileAnimController;
-  late Animation<double> _scaleAnimation;
   late Animation<double> _rotateAnimation;
 
   @override
@@ -45,10 +44,6 @@ class _PuzzleGameScreenState extends State<PuzzleGameScreen>
     _tileAnimController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
-    );
-    
-    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.1).animate(
-      CurvedAnimation(parent: _winnerAnimController, curve: Curves.elasticOut),
     );
     
     _rotateAnimation = Tween<double>(begin: 0, end: 0.15).animate(

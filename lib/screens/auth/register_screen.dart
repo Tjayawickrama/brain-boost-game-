@@ -63,6 +63,14 @@ class _RegisterScreenState extends State<RegisterScreen>
         _nameCtrl.text.trim(), _emailCtrl.text.trim(), _passCtrl.text);
     if (ok && mounted) {
       Navigator.of(context).pushReplacementNamed('/home');
+    } else if (mounted && auth.errorMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(auth.errorMessage!),
+          backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     }
   }
 

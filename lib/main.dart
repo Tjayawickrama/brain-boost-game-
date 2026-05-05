@@ -10,7 +10,6 @@ import 'providers/game_provider.dart';
 import 'providers/profile_provider.dart';
 import 'theme/app_theme.dart';
 import 'theme/app_colors.dart';
-import 'splash_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/games/memory_game_screen.dart';
@@ -19,11 +18,18 @@ import 'screens/games/speed_tap_screen.dart';
 import 'screens/daily_challenge_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/leaderboard_screen.dart';
+import 'splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    debugPrint('Firebase init error: $e');
+  }
 
   // Lock to portrait
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -41,8 +47,8 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider(api, storage)),
-        ChangeNotifierProvider(create: (_) => GameProvider(api, storage)),
+        ChangeNotifierProvider(create: (_) => AuthProvider(storage)),
+        ChangeNotifierProvider(create: (_) => GameProvider(api)),
         ChangeNotifierProvider(create: (_) => ProfileProvider(api, storage)),
       ],
       child: const BrainBoostApp(),
@@ -55,19 +61,17 @@ class BrainBoostApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Listen to dark-mode toggle from ProfileProvider
-    final isDark = context.select<ProfileProvider, bool>((p) => p.isDarkMode);
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Brain Boost',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+      themeMode: ThemeMode.light,
       home: const _SplashGate(),
       routes: {
         '/home': (_) => const MainNavScreen(),
         '/login': (_) => const LoginScreen(),
+        '/daily-challenge': (_) => const DailyChallengeScreen(),
         '/leaderboard': (_) => const LeaderboardScreen(),
         '/memory': (_) => const MemoryGameScreen(),
         '/puzzle': (_) => const PuzzleGameScreen(),
@@ -85,56 +89,17 @@ class _SplashGate extends StatefulWidget {
 }
 
 class _SplashGateState extends State<_SplashGate> {
-  bool _firebaseReady = false;
-  bool _splashFinished = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _initFirebase();
-  }
-
-  Future<void> _initFirebase() async {
-    try {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-    } catch (e) {
-      // Ignore if already initialized
-    }
-    if (mounted) {
-      setState(() {
-        _firebaseReady = true;
-      });
-      _checkAndRoute();
-    }
-  }
-
   void _onSplashFinished() {
     if (!mounted) return;
-    setState(() {
-      _splashFinished = true;
-    });
-    _checkAndRoute();
-  }
-
-  void _checkAndRoute() {
-    if (_firebaseReady && _splashFinished) {
-      final auth = context.read<AuthProvider>();
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          pageBuilder: (_, __, ___) =>
-              auth.isLoggedIn ? const MainNavScreen() : const LoginScreen(),
-          transitionDuration: const Duration(milliseconds: 600),
-          transitionsBuilder: (_, anim, __, child) =>
-              FadeTransition(opacity: anim, child: child),
-        ),
-      );
-    }
+    final auth = context.read<AuthProvider>();
+    final nextRoute = auth.isLoggedIn ? '/home' : '/login';
+    Navigator.of(context).pushReplacementNamed(nextRoute);
   }
 
   @override
-  Widget build(BuildContext context) => SplashScreen(onFinished: _onSplashFinished);
+  Widget build(BuildContext context) {
+    return SplashScreen(onFinished: _onSplashFinished);
+  }
 }
 
 // ── Bottom tab navigation shell ───────────────────────────────────────────────
@@ -177,17 +142,60 @@ class _GamesHubScreen extends StatelessWidget {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            SliverAppBar(
-              backgroundColor: Colors.white,
-              floating: true,
-              automaticallyImplyLeading: false,
-              toolbarHeight: 140,
-              flexibleSpace: Image.asset(
-                'assets/images/games_header.png',
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: 140,
-              ),
+            SliverToBoxAdapter(
+              child: Builder(builder: (context) {
+                final width = MediaQuery.of(context).size.width;
+                final height = width * 0.42;
+                return Container(
+                  width: width,
+                  height: height,
+                  margin: const EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [AppColors.primary, AppColors.purple],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(28),
+                      bottomRight: Radius.circular(28),
+                    ),
+                  ),
+                  child: Stack(children: [
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      top: 0,
+                      child: Image.asset(
+                        'assets/images/games_header.png',
+                        width: width * 0.6,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          SizedBox(height: 12),
+                          Text('Ready to play?',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.white,
+                              )),
+                          SizedBox(height: 8),
+                          Text('Choose a game and sharpen your mind.',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white70,
+                              )),
+                        ],
+                      ),
+                    ),
+                  ]),
+                );
+              }),
             ),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 80),

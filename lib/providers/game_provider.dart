@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import '../models/game_score_model.dart';
 import '../services/mock_api_service.dart';
-import '../services/storage_service.dart';
 
 enum GameState { idle, playing, won, lost }
 
 /// Manages game session state: score, timer, win/lose detection.
 class GameProvider extends ChangeNotifier {
   final MockApiService _api;
-  final StorageService _storage;
 
   GameState _gameState = GameState.idle;
   int _score = 0;
@@ -16,7 +14,7 @@ class GameProvider extends ChangeNotifier {
   bool _isSaving = false;
   GameScoreModel? _lastScore;
 
-  GameProvider(this._api, this._storage);
+  GameProvider(this._api);
 
   GameState get gameState => _gameState;
   int get score => _score;

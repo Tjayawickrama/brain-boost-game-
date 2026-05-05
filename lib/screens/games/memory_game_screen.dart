@@ -15,14 +15,12 @@ const _kEmojis = ['🦁', '🐯', '🦊', '🐻', '🐼', '🐨', '🦄', '🐙'
 class _CardData {
   final int id;
   final String emoji;
-  bool isFaceUp;
-  bool isMatched;
+  bool isFaceUp = false;
+  bool isMatched = false;
 
   _CardData({
     required this.id,
     required this.emoji,
-    this.isFaceUp = false,
-    this.isMatched = false,
   });
 }
 
