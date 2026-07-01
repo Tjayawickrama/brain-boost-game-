@@ -56,17 +56,24 @@ void main() async {
   );
 }
 
-class BrainBoostApp extends StatelessWidget {
+class BrainBoostApp extends StatefulWidget {
   const BrainBoostApp({super.key});
 
   @override
+  State<BrainBoostApp> createState() => _BrainBoostAppState();
+}
+
+class _BrainBoostAppState extends State<BrainBoostApp> {
+  @override
   Widget build(BuildContext context) {
+    final profile = context.watch<ProfileProvider>();
+    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Brain Boost',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.light,
+      themeMode: profile.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       home: const _SplashGate(),
       routes: {
         '/home': (_) => const MainNavScreen(),

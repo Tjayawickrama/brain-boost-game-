@@ -99,8 +99,6 @@ class ProfileProvider extends ChangeNotifier {
     }
   }
 
-  bool get isDarkMode => _storage.isDarkMode;
-
   Future<void> toggleDarkMode() async {
     await _storage.setDarkMode(!isDarkMode);
     notifyListeners();

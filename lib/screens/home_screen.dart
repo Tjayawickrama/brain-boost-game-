@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ((total - levelMin) / (levelMax - levelMin)).clamp(0.0, 1.0);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF6FAFA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: CustomScrollView(
         slivers: [
           // ── App bar ──────────────────────────────────────────────────────
@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             expandedHeight: 0,
             floating: true,
             pinned: false,
-            backgroundColor: Colors.white,
+            backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
             elevation: 0,
             automaticallyImplyLeading: false,
             flexibleSpace: Padding(

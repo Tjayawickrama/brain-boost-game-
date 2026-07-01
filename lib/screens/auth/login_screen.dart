@@ -19,8 +19,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
-  final _emailCtrl = TextEditingController(text: 'test@brain.com');
-  final _passCtrl = TextEditingController(text: 'password123');
+  final _emailCtrl = TextEditingController();
+  final _passCtrl = TextEditingController();
   late AnimationController _fadeCtrl;
   late Animation<double> _fadeAnim;
   late Animation<Offset> _slideAnim;
@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen>
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 20),
@@ -216,9 +216,7 @@ class _LoginScreenState extends State<LoginScreen>
                     ]),
                     const SizedBox(height: 20),
 
-                    // ── Demo login hint ─────────────────────────────────
-                    _DemoHintCard(),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 8),
 
                     // ── Register link ──────────────────────────────────────
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -274,32 +272,4 @@ class _LoginScreenState extends State<LoginScreen>
   }
 }
 
-/// Hint card showing demo credentials.
-class _DemoHintCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.primaryFaint,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.primaryLight),
-      ),
-      child: Row(children: [
-        const Icon(Icons.info_outline_rounded,
-            color: AppColors.primary, size: 18),
-        const SizedBox(width: 10),
-        const Expanded(
-          child: Text(
-            'Demo: test@brain.com / password123',
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.primaryDark,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-      ]),
-    );
-  }
-}
+

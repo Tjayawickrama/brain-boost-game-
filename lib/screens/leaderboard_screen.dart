@@ -26,8 +26,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     final board = profile.leaderboard;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF6FAFA),
-      appBar: AppBar(title: const Text('Leaderboard'), backgroundColor: Colors.white),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(title: const Text('Leaderboard'), backgroundColor: Theme.of(context).appBarTheme.backgroundColor),
       body: profile.isLoading
           ? const Center(child: CircularProgressIndicator())
           : CustomScrollView(slivers: [

@@ -178,10 +178,10 @@ class _MemoryGameScreenState extends State<MemoryGameScreen>
     final timerColor = _timeLeft <= 10 ? Colors.red : AppColors.primary;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF6FAFA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Memory Match'),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         leading: IconButton(
           icon: const Icon(Icons.close_rounded),
           onPressed: () => Navigator.pop(context),

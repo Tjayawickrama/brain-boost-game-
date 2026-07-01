@@ -45,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .clamp(0.0, 1.0);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF6FAFA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: CustomScrollView(
         slivers: [
           // ── Teal header with avatar ─────────────────────────────────────
